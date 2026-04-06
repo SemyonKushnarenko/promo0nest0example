@@ -28,7 +28,13 @@ npm run prisma:migrate
 npm run dev
 ```
 
-Server listens on `PORT` (default `3100`). Swagger UI: `GET /docs` (disable via `SWAGGER=false`).
+Server listens on `PORT` (default `3100`).
+
+## Swagger
+
+- **Enable**: set `SWAGGER=true`
+- **Disable**: set `SWAGGER=false` (or omit)
+- **UI**: `GET /docs`
 
 ## Environment variables
 
@@ -37,6 +43,12 @@ Server listens on `PORT` (default `3100`). Swagger UI: `GET /docs` (disable via 
 - **`SWAGGER`** (optional, default `false`): set to `true` to enable Swagger UI at `GET /docs`.
 
 Startup will fail fast if required env vars are missing or invalid.
+
+## Main behavior
+
+- **Rate limiting**: enabled globally via `@nestjs/throttler`.
+- **Request correlation**: responses include `x-request-id` (you can send one, otherwise it’s generated).
+- **Validation**: strict DTO validation with whitelist + forbid unknown fields.
 
 ## Error format
 
@@ -93,6 +105,24 @@ Payload:
   "code": "WELCOME10",
   "email": "user@example.com"
 }
+```
+
+## Quick test (curl)
+
+Create a promo code:
+
+```bash
+curl -X POST "http://localhost:3100/promocodes" ^
+  -H "content-type: application/json" ^
+  -d "{\"code\":\"WELCOME10\",\"discountPercent\":10,\"activationLimit\":100}"
+```
+
+Activate it:
+
+```bash
+curl -X POST "http://localhost:3100/activations" ^
+  -H "content-type: application/json" ^
+  -d "{\"code\":\"WELCOME10\",\"email\":\"user@example.com\"}"
 ```
 
 ## Correctness guarantees
