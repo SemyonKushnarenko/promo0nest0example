@@ -1,0 +1,7 @@
+.agents
+skills-lock.json
+.env
+/generated/prisma
+node_modules
+dist
+speech.txt

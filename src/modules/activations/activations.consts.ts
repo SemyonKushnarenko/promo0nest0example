@@ -1,0 +1,2 @@
+export const ACTIVATIONS_MAX_RETRIES = 3;
+
